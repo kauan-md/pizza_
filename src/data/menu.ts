@@ -36,7 +36,7 @@ export const products: Product[] = [
     id: "p1",
     name: "Pizza Francesa + Sukita",
     description:
-      "Molho especial Lopez, presunto, milho, ervilha, ovo e catupiry. Acompanha Sukita 350ml.",
+      "Molho especial, presunto, milho, ervilha, ovo e catupiry. Acompanha Sukita 350ml.",
     price: 39.99,
     oldPrice: 54.9,
     category: "ofertas",
@@ -56,7 +56,7 @@ export const products: Product[] = [
   },
   {
     id: "p3",
-    name: "Dupla Lopez (2 Médias)",
+    name: "Dupla (2 Médias)",
     description:
       "Duas pizzas médias para você escolher os sabores. Ideal para dividir com a galera.",
     price: 64.9,

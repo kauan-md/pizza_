@@ -80,21 +80,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
       { name: "theme-color", content: "#0A0A0A" },
-      { title: "Pizza Lopez — Delivery de Pizza em Osasco" },
+      { title: "Pizza — Delivery de Pizza em Osasco" },
       {
         name: "description",
         content:
           "Peça as melhores pizzas de Osasco no precinho de segunda a quinta por R$ 22,99. Entrega rápida, ingredientes premium e pagamento no Pix.",
       },
-      { name: "author", content: "Pizza Lopez" },
-      { property: "og:title", content: "Pizza Lopez — Delivery de Pizza em Osasco" },
+      { name: "author", content: "Pizza" },
+      { property: "og:title", content: "Pizza — Delivery de Pizza em Osasco" },
       {
         property: "og:description",
         content: "No precinho de segunda a quinta por apenas R$ 22,99. Peça já!",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Pizza Lopez — Delivery de Pizza em Osasco" },
+      { name: "twitter:title", content: "Pizza — Delivery de Pizza em Osasco" },
 
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/44a6401c-f8e9-43e7-adf6-ae940a96284d/id-preview-0ae47b89--a125c0fe-0c75-44b7-994e-2a7c5ebe99bb.lovable.app-1780178950089.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/44a6401c-f8e9-43e7-adf6-ae940a96284d/id-preview-0ae47b89--a125c0fe-0c75-44b7-994e-2a7c5ebe99bb.lovable.app-1780178950089.png" },

@@ -23,12 +23,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Load user from localStorage on mount
   useEffect(() => {
-    const savedUser = localStorage.getItem("pizza_lopez_user");
+    const savedUser = localStorage.getItem("pizza_user");
     if (savedUser) {
       try {
         setUser(JSON.parse(savedUser));
       } catch (e) {
-        localStorage.removeItem("pizza_lopez_user");
+        localStorage.removeItem("pizza_user");
       }
     }
     setIsLoading(false);
@@ -49,7 +49,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
     
     setUser(mockUser);
-    localStorage.setItem("pizza_lopez_user", JSON.stringify(mockUser));
+    localStorage.setItem("pizza_user", JSON.stringify(mockUser));
     setIsLoading(false);
   };
 
@@ -64,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
     
     setUser(mockUser);
-    localStorage.setItem("pizza_lopez_user", JSON.stringify(mockUser));
+    localStorage.setItem("pizza_user", JSON.stringify(mockUser));
     setIsLoading(false);
   };
 
@@ -80,13 +80,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
     
     setUser(mockUser);
-    localStorage.setItem("pizza_lopez_user", JSON.stringify(mockUser));
+    localStorage.setItem("pizza_user", JSON.stringify(mockUser));
     setIsLoading(false);
   };
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("pizza_lopez_user");
+    localStorage.removeItem("pizza_user");
   };
 
   return (

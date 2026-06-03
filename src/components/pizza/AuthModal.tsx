@@ -29,7 +29,7 @@ export function AuthModal({ onClose }: AuthModalProps) {
     try {
       await loginWithGoogle();
       toast.success("Login efetuado com o Google!", {
-        description: "Bem-vindo de volta à Pizza Lopez!",
+        description: "Bem-vindo de volta à Pizza!",
       });
       onClose();
     } catch (error) {
@@ -97,7 +97,6 @@ export function AuthModal({ onClose }: AuthModalProps) {
         <div className="flex items-center gap-1 font-display text-xl font-extrabold uppercase text-primary">
           <span>PIZZA</span>
           <Zap className="h-5 w-5 fill-primary" />
-          <span>LOPEZ</span>
         </div>
         <DialogTitle className="mt-2 text-xl font-bold text-foreground">
           {activeTab === "login" ? "Entre na sua conta" : "Crie sua conta grátis"}

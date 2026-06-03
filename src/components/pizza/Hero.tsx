@@ -11,7 +11,7 @@ export function Hero() {
         {/* Background pizza image */}
         <img
           src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=1200&q=70"
-          alt="Pizza artesanal Pizza Lopez"
+          alt="Pizza artesanal"
           loading="eager"
           className="absolute inset-0 h-full w-full object-cover opacity-30"
         />

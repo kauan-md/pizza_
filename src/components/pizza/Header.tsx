@@ -40,7 +40,6 @@ export function Header({ onCartClick }: HeaderProps) {
         <div className="flex items-center font-display text-lg font-extrabold uppercase tracking-tight text-primary sm:text-xl">
           <span>PIZZA</span>
           <Zap className="mx-0.5 h-5 w-5 fill-primary text-primary" />
-          <span>LOPEZ</span>
         </div>
 
         {/* Status (hidden on very small screens) */}

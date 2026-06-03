@@ -11,7 +11,7 @@ import { CartSheet } from "@/components/pizza/CartSheet";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Pizza Lopez — Delivery de Pizza em Osasco" },
+      { title: "Pizza — Delivery de Pizza em Osasco" },
       {
         name: "description",
         content:
@@ -37,10 +37,10 @@ function Index() {
 
         <footer className="mx-auto mt-12 w-full max-w-6xl px-4 pb-8 text-center text-xs text-muted-foreground">
           <div className="flex items-center justify-center gap-1 font-display text-sm font-extrabold uppercase text-primary">
-            PIZZA <Zap className="h-4 w-4 fill-primary" /> LOPEZ
+            PIZZA <Zap className="h-4 w-4 fill-primary" />
           </div>
           <p className="mt-2">Entregando sabor em Osasco · Pague no Pix</p>
-          <p className="mt-1">© {new Date().getFullYear()} Pizza Lopez. Todos os direitos reservados.</p>
+          <p className="mt-1">© {new Date().getFullYear()} Pizza. Todos os direitos reservados.</p>
         </footer>
 
         <CartBar onCheckout={() => setCartOpen(true)} />
