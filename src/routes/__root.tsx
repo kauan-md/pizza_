@@ -98,6 +98,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/44a6401c-f8e9-43e7-adf6-ae940a96284d/id-preview-0ae47b89--a125c0fe-0c75-44b7-994e-2a7c5ebe99bb.lovable.app-1780178950089.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/44a6401c-f8e9-43e7-adf6-ae940a96284d/id-preview-0ae47b89--a125c0fe-0c75-44b7-994e-2a7c5ebe99bb.lovable.app-1780178950089.png" },
+      { name: "description", content: "Pizza_ synchronizes your local project with your Git repository." },
+      { property: "og:description", content: "Pizza_ synchronizes your local project with your Git repository." },
+      { name: "twitter:description", content: "Pizza_ synchronizes your local project with your Git repository." },
     ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
