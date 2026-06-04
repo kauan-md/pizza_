@@ -42,6 +42,7 @@ function Profile() {
     }
 
     async function loadOrders() {
+      if (!user) return;
       try {
         const supabase = getSupabase();
         if (!supabase) {
