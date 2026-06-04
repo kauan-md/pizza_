@@ -61,6 +61,7 @@ export const updateOrderStatus = createServerFn({ method: "POST" })
 
 export const listAllProducts = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = getSupabaseAdmin();
+  if (!supabase) throw new Error("Supabase não configurado");
 
   const { data, error } = await supabase
     .from("products")
@@ -210,6 +211,7 @@ export const toggleCoupon = createServerFn({ method: "POST" })
   .inputValidator(toggleCouponSchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseAdmin();
+    if (!supabase) throw new Error("Supabase não configurado");
     const { error } = await supabase
       .from("coupons")
       .update({ active: data.active })

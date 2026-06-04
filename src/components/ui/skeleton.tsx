@@ -1,10 +1,8 @@
-interface SkeletonProps {
-  className?: string;
-}
+type SkeletonProps = React.HTMLAttributes<HTMLDivElement>;
 
-export function Skeleton({ className = "" }: SkeletonProps) {
+export function Skeleton({ className = "", ...props }: SkeletonProps) {
   return (
-    <div className={`animate-pulse rounded-lg bg-muted ${className}`} />
+    <div className={`animate-pulse rounded-lg bg-muted ${className}`} {...props} />
   );
 }
 
