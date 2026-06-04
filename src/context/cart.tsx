@@ -2,12 +2,15 @@ import {
   createContext,
   useCallback,
   useContext,
+  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
 import { toast } from "sonner";
 import type { Product } from "@/data/menu";
+
+const STORAGE_KEY = "pizza_cart";
 
 export interface CartItem extends Product {
   quantity: number;
@@ -25,8 +28,20 @@ interface CartContextValue {
 
 const CartContext = createContext<CartContextValue | undefined>(undefined);
 
+function loadCart(): CartItem[] {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch { /* ignore */ }
+  return [];
+}
+
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(loadCart);
+
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+  }, [items]);
 
   const addItem = useCallback((product: Product) => {
     setItems((prev) => {
@@ -55,7 +70,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => prev.filter((i) => i.id !== id));
   }, []);
 
-  const clear = useCallback(() => setItems([]), []);
+  const clear = useCallback(() => {
+    setItems([]);
+    localStorage.removeItem(STORAGE_KEY);
+  }, []);
 
   const value = useMemo<CartContextValue>(() => {
     const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);

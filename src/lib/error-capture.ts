@@ -8,11 +8,15 @@ function record(error: unknown) {
   lastCapturedError = { error, at: Date.now() };
 }
 
-if (typeof globalThis.addEventListener === "function") {
-  globalThis.addEventListener("error", (event) => record((event as ErrorEvent).error ?? event));
-  globalThis.addEventListener("unhandledrejection", (event) =>
-    record((event as PromiseRejectionEvent).reason),
-  );
+try {
+  if (typeof globalThis.addEventListener === "function") {
+    globalThis.addEventListener("error", (event) => record((event as ErrorEvent).error ?? event));
+    globalThis.addEventListener("unhandledrejection", (event) =>
+      record((event as PromiseRejectionEvent).reason),
+    );
+  }
+} catch {
+  // error capture não essencial — ignora falha na inicialização
 }
 
 export function consumeLastCapturedError(): unknown {

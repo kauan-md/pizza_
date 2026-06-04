@@ -1,12 +1,13 @@
-import { categories, type Category } from "@/data/menu";
 import { cn } from "@/lib/utils";
+import type { CategoryDef } from "@/data/menu";
 
 interface CategoryNavProps {
-  active: Category;
-  onChange: (category: Category) => void;
+  categories: CategoryDef[];
+  active: string;
+  onChange: (category: string) => void;
 }
 
-export function CategoryNav({ active, onChange }: CategoryNavProps) {
+export function CategoryNav({ categories, active, onChange }: CategoryNavProps) {
   return (
     <div className="sticky top-16 z-40 -mx-4 mt-6 bg-background/95 px-4 py-3 backdrop-blur-md">
       <div className="mx-auto w-full max-w-6xl">

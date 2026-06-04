@@ -1,5 +1,5 @@
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
-import { toast } from "sonner";
+import { useNavigate } from "@tanstack/react-router";
 import {
   Sheet,
   SheetContent,
@@ -18,17 +18,15 @@ interface CartSheetProps {
 const DELIVERY_FEE = 6.99;
 
 export function CartSheet({ open, onOpenChange }: CartSheetProps) {
-  const { items, total, itemCount, addItem, decrement, removeItem, clear } =
+  const navigate = useNavigate();
+  const { items, total, itemCount, addItem, decrement, removeItem } =
     useCart();
 
   const grandTotal = itemCount > 0 ? total + DELIVERY_FEE : 0;
 
   const handleCheckout = () => {
-    toast.success("Pedido finalizado!", {
-      description: `Total ${formatBRL(grandTotal)} · pague no Pix na entrega.`,
-    });
-    clear();
     onOpenChange(false);
+    navigate({ to: "/checkout" });
   };
 
   return (

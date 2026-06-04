@@ -13,6 +13,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/context/auth";
+import { CartProvider } from "@/context/cart";
+import { ThemeProvider } from "@/context/theme";
 
 function NotFoundComponent() {
   return (
@@ -79,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { name: "theme-color", content: "#0A0A0A" },
+      { name: "theme-color", content: "#0A0A0A" },  /* overridden by inline script */
       { title: "Pizza — Delivery de Pizza em Osasco" },
       {
         name: "description",
@@ -123,8 +125,25 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="pt-BR" className="dark">
+    <html lang="pt-BR" suppressHydrationWarning>
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var theme = localStorage.getItem('theme');
+                  if (!theme) theme = 'dark';
+                  if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                  }
+                  var meta = document.querySelector('meta[name="theme-color"]');
+                  if (meta) meta.setAttribute('content', theme === 'dark' ? '#0A0A0A' : '#F5F5F0');
+                } catch(e) {}
+              })();
+            `,
+          }}
+        />
         <HeadContent />
       </head>
       <body className="bg-background text-foreground antialiased">
@@ -140,9 +159,12 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
       <AuthProvider>
+        <CartProvider>
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
         <Outlet />
+        </CartProvider>
         <Toaster
           position="top-center"
           toastOptions={{
@@ -153,6 +175,7 @@ function RootComponent() {
           }}
         />
       </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }

@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Zap } from "lucide-react";
-import { CartProvider } from "@/context/cart";
 import { Header } from "@/components/pizza/Header";
 import { Hero } from "@/components/pizza/Hero";
 import { Menu } from "@/components/pizza/Menu";
@@ -26,8 +25,7 @@ function Index() {
   const [cartOpen, setCartOpen] = useState(false);
 
   return (
-    <CartProvider>
-      <div className="min-h-screen bg-background pb-28">
+    <div className="min-h-screen bg-background pb-28">
         <Header onCartClick={() => setCartOpen(true)} />
 
         <main>
@@ -46,6 +44,5 @@ function Index() {
         <CartBar onCheckout={() => setCartOpen(true)} />
         <CartSheet open={cartOpen} onOpenChange={setCartOpen} />
       </div>
-    </CartProvider>
   );
 }
