@@ -24,6 +24,10 @@ function ResetPassword() {
 
   useEffect(() => {
     const supabase = getSupabase();
+    if (!supabase) {
+      toast.error("Erro de configuração. Verifique as variáveis de ambiente.");
+      return;
+    }
     supabase.auth.onAuthStateChange((event) => {
       if (event === "PASSWORD_RECOVERY") {
         setReady(true);

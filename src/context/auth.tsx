@@ -49,46 +49,49 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     let subscription: { unsubscribe: () => void } | null = null;
 
-    try {
-      const supabase = getSupabase();
+    const supabase = getSupabase();
 
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        if (session?.user) {
-          setUser(mapSupabaseUser(session.user));
-          localStorage.setItem("pizza_user", JSON.stringify(mapSupabaseUser(session.user)));
-        } else {
-          setUser(fallbackToLocalStorage());
-        }
-        setIsLoading(false);
-      });
-
-      const { data } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (session?.user) {
-          const u = mapSupabaseUser(session.user);
-          setUser(u);
-          localStorage.setItem("pizza_user", JSON.stringify(u));
-        } else {
-          setUser(null);
-          localStorage.removeItem("pizza_user");
-        }
-      });
-      subscription = data.subscription;
-    } catch {
+    if (!supabase) {
       setUser(fallbackToLocalStorage());
       setIsLoading(false);
+      return;
     }
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        setUser(mapSupabaseUser(session.user));
+        localStorage.setItem("pizza_user", JSON.stringify(mapSupabaseUser(session.user)));
+      } else {
+        setUser(fallbackToLocalStorage());
+      }
+      setIsLoading(false);
+    });
+
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (session?.user) {
+        const u = mapSupabaseUser(session.user);
+        setUser(u);
+        localStorage.setItem("pizza_user", JSON.stringify(u));
+      } else {
+        setUser(null);
+        localStorage.removeItem("pizza_user");
+      }
+    });
+    subscription = data.subscription;
 
     return () => subscription?.unsubscribe();
   }, []);
 
   const login = async (email: string, password: string) => {
     const supabase = getSupabase();
+    if (!supabase) throw new Error("Supabase não configurado");
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) throw error;
   };
 
   const register = async (name: string, email: string, password: string) => {
     const supabase = getSupabase();
+    if (!supabase) throw new Error("Supabase não configurado");
     const { error } = await supabase.auth.signUp({
       email,
       password,
@@ -100,7 +103,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logout = async () => {
     try {
       const supabase = getSupabase();
-      await supabase.auth.signOut();
+      if (supabase) await supabase.auth.signOut();
     } catch {
       // se Supabase não estiver configurado, limpa estado local
     }
@@ -110,6 +113,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const forgotPassword = async (email: string) => {
     const supabase = getSupabase();
+    if (!supabase) throw new Error("Supabase não configurado");
     const origin = typeof window !== "undefined" ? window.location.origin : "";
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${origin}/reset-password`,
@@ -119,6 +123,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const updatePassword = async (password: string) => {
     const supabase = getSupabase();
+    if (!supabase) throw new Error("Supabase não configurado");
     const { error } = await supabase.auth.updateUser({ password });
     if (error) throw error;
   };

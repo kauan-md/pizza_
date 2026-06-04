@@ -148,6 +148,7 @@ function OrdersTab() {
     loadOrders();
 
     const supabase = getSupabase();
+    if (!supabase) return;
     const channel = supabase
       .channel("admin-orders")
       .on(
@@ -279,9 +280,10 @@ function ProductsTab() {
     setLoading(true);
     setError(null);
     try {
+      const supabase = getSupabase();
       const [prods, catData] = await Promise.all([
         listAllProducts(),
-        getSupabase().from("categories").select("*").order("display_order").then((r) => r.data ?? []),
+        supabase ? supabase.from("categories").select("*").order("display_order").then((r) => r.data ?? []) : Promise.resolve([]),
       ]);
       setProducts(prods);
       setCategories(catData as any[]);

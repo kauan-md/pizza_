@@ -33,6 +33,11 @@ export function Menu() {
     async function load() {
       try {
         const supabase = getSupabase();
+        if (!supabase) {
+          setError("Configure as variáveis de ambiente VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no Lovable para carregar o cardápio.");
+          setLoading(false);
+          return;
+        }
 
         const { data: cats, error: catErr } = await supabase
           .from("categories")

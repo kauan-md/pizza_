@@ -9,10 +9,9 @@ export function getSupabaseServer() {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-    console.log("[supabase.server] URL:", supabaseUrl, "KEY exists:", !!supabaseAnonKey);
-
     if (!supabaseUrl || !supabaseAnonKey) {
-      throw new Error("VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY são obrigatórias no servidor");
+      console.warn("[supabase.server] VITE_SUPABASE_URL e/ou VITE_SUPABASE_ANON_KEY não definidas.");
+      return null;
     }
 
     supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
@@ -31,7 +30,8 @@ export function getSupabaseAdmin() {
     const serviceRoleKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !serviceRoleKey) {
-      throw new Error("VITE_SUPABASE_SERVICE_ROLE_KEY não configurada no servidor");
+      console.warn("[supabase.server] VITE_SUPABASE_SERVICE_ROLE_KEY não configurada.");
+      return null;
     }
 
     supabaseAdminInstance = createClient(supabaseUrl, serviceRoleKey, {
@@ -43,3 +43,5 @@ export function getSupabaseAdmin() {
   }
   return supabaseAdminInstance;
 }
+
+export { type SupabaseClient };

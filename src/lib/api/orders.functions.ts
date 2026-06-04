@@ -24,6 +24,7 @@ export const createOrder = createServerFn({ method: "POST" })
   .inputValidator(createOrderSchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseServer();
+    if (!supabase) throw new Error("Supabase não configurado no servidor");
 
     const { data: order, error: orderError } = await supabase
       .from("orders")
@@ -74,6 +75,7 @@ export const getOrder = createServerFn({ method: "GET" })
   .inputValidator(z.object({ id: z.string() }))
   .handler(async ({ data }) => {
     const supabase = getSupabaseServer();
+    if (!supabase) throw new Error("Supabase não configurado no servidor");
 
     const { data: order, error: orderError } = await supabase
       .from("orders")

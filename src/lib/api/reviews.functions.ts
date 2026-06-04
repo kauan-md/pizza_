@@ -14,6 +14,7 @@ export const createReview = createServerFn({ method: "POST" })
   )
   .handler(async ({ data }) => {
     const supabase = getSupabaseAdmin();
+    if (!supabase) throw new Error("Supabase não configurado");
 
     const { error } = await supabase.from("reviews").insert({
       product_id: data.product_id,
@@ -31,6 +32,7 @@ export const listProductReviews = createServerFn({ method: "GET" })
   .inputValidator(z.object({ product_id: z.string() }))
   .handler(async ({ data }) => {
     const supabase = getSupabaseAdmin();
+    if (!supabase) throw new Error("Supabase não configurado");
 
     const { data: reviews, error } = await supabase
       .from("reviews")
@@ -44,6 +46,7 @@ export const listProductReviews = createServerFn({ method: "GET" })
 
 export const listAllReviews = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = getSupabaseAdmin();
+  if (!supabase) throw new Error("Supabase não configurado");
 
   const { data, error } = await supabase
     .from("reviews")

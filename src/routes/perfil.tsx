@@ -44,6 +44,11 @@ function Profile() {
     async function loadOrders() {
       try {
         const supabase = getSupabase();
+        if (!supabase) {
+          setOrders([]);
+          setLoading(false);
+          return;
+        }
 
         const { data: orderData, error: orderErr } = await supabase
           .from("orders")

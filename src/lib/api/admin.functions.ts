@@ -4,6 +4,7 @@ import { getSupabaseAdmin } from "./supabase.server";
 
 export const listAllOrders = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = getSupabaseAdmin();
+  if (!supabase) throw new Error("Supabase não configurado");
 
   const { data: orders, error } = await supabase
     .from("orders")
@@ -44,6 +45,7 @@ export const updateOrderStatus = createServerFn({ method: "POST" })
   .inputValidator(updateStatusSchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseAdmin();
+    if (!supabase) throw new Error("Supabase não configurado");
 
     const { error } = await supabase
       .from("orders")
@@ -85,6 +87,7 @@ export const createProduct = createServerFn({ method: "POST" })
   .inputValidator(productSchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseAdmin();
+    if (!supabase) throw new Error("Supabase não configurado");
 
     const { error } = await supabase.from("products").insert({
       id: data.id,
@@ -118,6 +121,7 @@ export const updateProduct = createServerFn({ method: "POST" })
   .inputValidator(updateProductSchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseAdmin();
+    if (!supabase) throw new Error("Supabase não configurado");
 
     const { error } = await supabase
       .from("products")
@@ -141,6 +145,7 @@ export const toggleProductAvailability = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string(), available: z.boolean() }))
   .handler(async ({ data }) => {
     const supabase = getSupabaseAdmin();
+    if (!supabase) throw new Error("Supabase não configurado");
 
     const { error } = await supabase
       .from("products")
@@ -160,6 +165,7 @@ const uploadImageSchema = z.object({
 
 export const listAllCoupons = createServerFn({ method: "GET" }).handler(async () => {
   const supabase = getSupabaseAdmin();
+  if (!supabase) throw new Error("Supabase não configurado");
   const { data, error } = await supabase
     .from("coupons")
     .select("*")
@@ -181,6 +187,7 @@ export const createCoupon = createServerFn({ method: "POST" })
   .inputValidator(couponSchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseAdmin();
+    if (!supabase) throw new Error("Supabase não configurado");
     const { error } = await supabase.from("coupons").insert({
       code: data.code,
       discount_type: data.discount_type,
@@ -215,6 +222,7 @@ export const uploadImage = createServerFn({ method: "POST" })
   .inputValidator(uploadImageSchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseAdmin();
+    if (!supabase) throw new Error("Supabase não configurado");
 
     const base64Data = data.base64.replace(/^data:image\/\w+;base64,/, "");
     const buffer = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));

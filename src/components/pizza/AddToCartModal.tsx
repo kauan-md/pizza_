@@ -34,7 +34,12 @@ export function AddToCartModal({ product, open, onClose }: Props) {
     if (!open) return;
     setMode("choice");
     setSecondProduct(null);
-    getSupabase()
+    const supabase = getSupabase();
+    if (!supabase) {
+      setAllProducts([]);
+      return;
+    }
+    supabase
       .from("products")
       .select("id, name, description, price, old_price, category_id, tag, image")
       .eq("available", true)
@@ -128,7 +133,9 @@ export function AddToCartModal({ product, open, onClose }: Props) {
                   1º sabor: <span className="font-semibold text-foreground">{product.name}</span>
                 </p>
                 <div className="grid grid-cols-2 gap-2">
-                  {otherProducts.map((p) => (
+                  {otherProducts.length === 0 ? (
+                    <p className="col-span-2 text-sm text-muted-foreground">Supabase não configurado</p>
+                  ) : otherProducts.map((p) => (
                     <button
                       key={p.id}
                       onClick={() => setSecondProduct(p)}

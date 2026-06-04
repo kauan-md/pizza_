@@ -11,6 +11,7 @@ export const validateCoupon = createServerFn({ method: "POST" })
   .inputValidator(validateCouponSchema)
   .handler(async ({ data }) => {
     const supabase = getSupabaseAdmin();
+    if (!supabase) throw new Error("Supabase não configurado");
 
     const { data: coupon, error } = await supabase
       .from("coupons")
