@@ -136,27 +136,27 @@ create table if not exists public.reviews (
 alter table public.reviews enable row level security;
 
 -- RLS policies
-create policy "Profiles are viewable by the user themselves"
+create policy if not exists "Profiles are viewable by the user themselves"
   on public.profiles for select
   using (auth.uid() = id);
 
-create policy "Products are viewable by everyone"
+create policy if not exists "Products are viewable by everyone"
   on public.products for select
   using (true);
 
-create policy "Categories are viewable by everyone"
+create policy if not exists "Categories are viewable by everyone"
   on public.categories for select
   using (true);
 
-create policy "Users can view their own orders"
+create policy if not exists "Users can view their own orders"
   on public.orders for select
   using (auth.uid() = user_id);
 
-create policy "Users can insert their own orders"
+create policy if not exists "Users can insert their own orders"
   on public.orders for insert
   with check (auth.uid() = user_id);
 
-create policy "Users can view their own order items"
+create policy if not exists "Users can view their own order items"
   on public.order_items for select
   using (
     exists (
@@ -166,7 +166,7 @@ create policy "Users can view their own order items"
     )
   );
 
-create policy "Users can insert items in their own orders"
+create policy if not exists "Users can insert items in their own orders"
   on public.order_items for insert
   with check (
     exists (
