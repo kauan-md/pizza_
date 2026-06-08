@@ -1,5 +1,6 @@
 {
   "buildCommand": "bunx vite build",
+  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
   "outputDirectory": "dist/client",
   "framework": "vite"
 }
