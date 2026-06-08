@@ -77,15 +77,28 @@ export function Header({ onCartClick }: HeaderProps) {
               <DropdownMenuTrigger asChild>
                 <button
                   aria-label="Menu do usuário"
-                  className="flex h-10 w-10 cursor-pointer items-center justify-center rounded-full bg-primary/10 text-primary border border-primary/20 font-display font-bold text-sm transition-transform active:scale-95 hover:bg-primary/15"
+                  className="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary border border-primary/20 font-display font-bold text-sm transition-transform active:scale-95 hover:bg-primary/15"
                 >
-                  {getInitials(user.name)}
+                  {user.avatarUrl ? (
+                    <img src={user.avatarUrl} alt={user.name} className="h-full w-full object-cover" />
+                  ) : (
+                    getInitials(user.name)
+                  )}
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56 border-primary/10 bg-card/95 backdrop-blur-md animate-in fade-in-80 duration-100">
-                <DropdownMenuLabel className="font-semibold text-foreground">
-                  <div className="text-sm font-bold">{user.name}</div>
-                  <div className="text-[11px] font-normal text-muted-foreground truncate">{user.email}</div>
+                <DropdownMenuLabel className="flex items-center gap-3 font-semibold text-foreground">
+                  {user.avatarUrl ? (
+                    <img src={user.avatarUrl} alt={user.name} className="h-10 w-10 rounded-full object-cover" />
+                  ) : (
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary font-display font-bold text-sm">
+                      {getInitials(user.name)}
+                    </div>
+                  )}
+                  <div>
+                    <div className="text-sm font-bold">{user.name}</div>
+                    <div className="text-[11px] font-normal text-muted-foreground truncate">{user.email}</div>
+                  </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild className="cursor-pointer">

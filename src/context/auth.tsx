@@ -13,6 +13,7 @@ interface AuthContextType {
   user: UserSession | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  loginWithGoogle: () => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
   forgotPassword: (email: string) => Promise<void>;
@@ -111,6 +112,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.removeItem("pizza_user");
   };
 
+  const loginWithGoogle = async () => {
+    const supabase = getSupabase();
+    if (!supabase) throw new Error("Supabase não configurado");
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: typeof window !== "undefined" ? window.location.origin : undefined,
+      },
+    });
+    if (error) throw error;
+  };
+
   const forgotPassword = async (email: string) => {
     const supabase = getSupabase();
     if (!supabase) throw new Error("Supabase não configurado");
@@ -134,6 +147,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         user,
         isLoading,
         login,
+        loginWithGoogle,
         register,
         logout,
         forgotPassword,
