@@ -1,6 +1,5 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-
-export default async (req: VercelRequest, res: VercelResponse) => {
+// Use plain `any` for request/response to avoid depending on @vercel/node types
+export default async (req: any, res: any) => {
   try {
     // Tenta importar o handler SSR (suporta ESM)
     const handler = await import("../dist/server/server.js").then((m) => m.default);
@@ -29,7 +28,7 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     res.status(response.status);
 
     // Copia os headers
-    response.headers.forEach((value, key) => {
+    response.headers.forEach((value: string, key: string) => {
       res.setHeader(key, value);
     });
 
