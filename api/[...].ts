@@ -1,8 +1,11 @@
 // Use plain `any` for request/response to avoid depending on @vercel/node types
+import { join } from "path";
+
 export default async (req: any, res: any) => {
   try {
-    // Tenta importar o handler SSR (suporta ESM)
-    const handler = await import("../dist/server/server.js").then((m) => m.default);
+    // Tenta importar o handler SSR (suporta ESM) usando caminho absoluto
+    const serverPath = join(process.cwd(), "dist", "server", "server.js");
+    const handler = await import(serverPath).then((m) => m.default);
 
     // Monta a URL completa
     const protocol = req.headers["x-forwarded-proto"] || "https";
