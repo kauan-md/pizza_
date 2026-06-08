@@ -14,12 +14,12 @@
 
 **Pergunta:** Como deve funcionar o controle de acesso ao admin?
 
-- [ ] a) Adicionar campo `role` em `profiles` (`user` | `admin`) e proteger via middleware
+- [x] a) Adicionar campo `role` em `profiles` (`user` | `admin`) e proteger via middleware
 - [ ] b) Manter sem RBAC — acesso por "security through obscurity" (URL não divulgada)
 - [ ] c) Autenticação separada (senha fixa de admin, sem conta Supabase)
 - [ ] d) Outro: _______________
 
-**Resposta:** _(preencher)_
+**Resposta:** a) Adicionar campo `role` em `profiles` (`user` | `admin`) e proteger via middleware
 
 ---
 
@@ -37,7 +37,7 @@
 - [ ] c) Pix automático via API do Banco Central (PIX API)
 - [ ] d) Outro: _______________
 
-**Resposta:** _(preencher)_
+**Resposta:** b) Precisa de integração de gateway (qual? Pagar.me / Stripe / MercadoPago / outro)
 
 ---
 
@@ -55,7 +55,7 @@
 - [ ] c) Estava em outro branch e será reintegrada depois
 - [ ] d) Não sei
 
-**Resposta:** _(preencher)_
+**Resposta:** a) Sim — deve ser implementada (pizza com dois sabores diferentes)
 
 ---
 
@@ -73,7 +73,7 @@
 - [ ] c) Sim — deve variar por região/distância (requer integração de CEP ou mapa)
 - [ ] d) Frete grátis acima de determinado valor
 
-**Resposta:** _(preencher)_
+**Resposta:** b) Sim — deve vir de uma tabela de configurações no banco
 
 ---
 
@@ -91,4 +91,4 @@
 - [ ] c) Sim — enviar SMS ou WhatsApp (requer integração externa)
 - [ ] d) Não — atualização manual é suficiente
 
-**Resposta:** _(preencher)_
+**Resposta:** c) Sim — enviar SMS ou WhatsApp (requer integração externa)
