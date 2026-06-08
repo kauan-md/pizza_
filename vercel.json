@@ -1,7 +1,5 @@
 {
-  "buildCommand": "bun run build",
+  "buildCommand": "NITRO_PRESET=vercel bun run build",
   "installCommand": "bun install",
-  "rewrites": [{ "source": "/(.*)", "destination": "/" }],
-  "outputDirectory": "dist/client",
   "framework": null
 }
