@@ -1,23 +1,9 @@
 import type { VercelRequest, VercelResponse } from "@vercel/node";
-import { join } from "path";
 
 export default async (req: VercelRequest, res: VercelResponse) => {
   try {
-    // Tenta importar o handler SSR
-    let handler;
-    try {
-      // Em desenvolvimento/build local
-      handler = require("../dist/server/server.js").default;
-    } catch {
-      try {
-        // No Vercel, pode estar em um caminho diferente
-        handler = require("./dist/server/server.js").default;
-      } catch {
-        // Fallback: buscar no caminho absoluto
-        const path = join(process.cwd(), "dist/server/server.js");
-        handler = require(path).default;
-      }
-    }
+    // Tenta importar o handler SSR (suporta ESM)
+    const handler = await import("../dist/server/server.js").then((m) => m.default);
 
     // Monta a URL completa
     const protocol = req.headers["x-forwarded-proto"] || "https";
@@ -30,7 +16,9 @@ export default async (req: VercelRequest, res: VercelResponse) => {
       headers: new Headers(req.headers as HeadersInit),
       body:
         req.method !== "GET" && req.method !== "HEAD" && req.body
-          ? JSON.stringify(req.body)
+          ? typeof req.body === "string"
+            ? req.body
+            : JSON.stringify(req.body)
           : undefined,
     });
 
@@ -53,6 +41,12 @@ export default async (req: VercelRequest, res: VercelResponse) => {
     res.status(500).json({
       error: "Internal Server Error",
       message: error instanceof Error ? error.message : String(error),
+      details:
+        process.env.NODE_ENV === "development"
+          ? error instanceof Error
+            ? error.stack
+            : String(error)
+          : undefined,
     });
   }
 };
