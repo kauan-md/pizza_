@@ -6,9 +6,13 @@ import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { fileURLToPath, URL } from "node:url";
 
 export default defineConfig({
+  envPrefix: ["VITE_", "NEXT_PUBLIC_", "NEXT_"],
   plugins: [
     tanstackStart({
       server: { entry: "server" },
+      router: {
+        autoCodeSplitting: true,
+      },
     }),
     react(),
     tailwindcss(),

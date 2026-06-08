@@ -6,13 +6,13 @@ let supabaseAdminInstance: SupabaseClient | null = null;
 
 export function getSupabaseServer() {
   if (!supabaseInstance) {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+    const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+    const supabaseAnonKey = import.meta.env.NEXT_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseAnonKey) {
       const missing = [
-        ...(!supabaseUrl ? ['VITE_SUPABASE_URL'] : []),
-        ...(!supabaseAnonKey ? ['VITE_SUPABASE_ANON_KEY'] : []),
+        ...(!supabaseUrl ? ['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'] : []),
+        ...(!supabaseAnonKey ? ['NEXT_SUPABASE_ANON_KEY'] : []),
       ];
       console.error(`[supabase.server] Missing environment variables: ${missing.join(', ')}`);
       throw new Error(`Missing Supabase environment variable(s): ${missing.join(', ')}.`);
@@ -30,12 +30,12 @@ export function getSupabaseServer() {
 
 export function getSupabaseAdmin() {
   if (!supabaseAdminInstance) {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseUrl = import.meta.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
     const serviceRoleKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !serviceRoleKey) {
       const missing = [
-        ...(!supabaseUrl ? ['VITE_SUPABASE_URL'] : []),
+        ...(!supabaseUrl ? ['NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY'] : []),
         ...(!serviceRoleKey ? ['VITE_SUPABASE_SERVICE_ROLE_KEY'] : []),
       ];
       console.error(`[supabase.server] Missing environment variables: ${missing.join(', ')}`);

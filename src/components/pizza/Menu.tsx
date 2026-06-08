@@ -34,7 +34,7 @@ export function Menu() {
       try {
         const supabase = getSupabase();
         if (!supabase) {
-          setError("As variáveis de ambiente do Supabase não estão configuradas. Configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY para carregar o cardápio.");
+          setError("As variáveis de ambiente do Supabase não estão configuradas. Configure NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY e NEXT_SUPABASE_ANON_KEY para carregar o cardápio.");
           setLoading(false);
           return;
         }

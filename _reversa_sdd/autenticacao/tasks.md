@@ -6,7 +6,7 @@
 
 - [ ] **T-AUTH-01** Remover mensagens "Connect Supabase in Lovable Cloud" de `client.ts`, `client.server.ts` e `auth-middleware.ts`
 - [ ] **T-AUTH-02** Mover anon key de fallback hardcoded para `.env` / variáveis de ambiente Vercel
-- [ ] **T-AUTH-03** Validar que `VITE_SUPABASE_URL` e `VITE_SUPABASE_PUBLISHABLE_KEY` estão configuradas no Vercel Dashboard
+- [ ] **T-AUTH-03** Validar que `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` e `VITE_SUPABASE_PUBLISHABLE_KEY` estão configuradas no Vercel Dashboard
 
 ## Para melhorias identificadas
 

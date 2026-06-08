@@ -59,7 +59,7 @@ interface UserSession {
 
 | Variável | Valor padrão no código | Confiança |
 |---------|------------------------|-----------|
-| `VITE_SUPABASE_URL` | `https://yonaaysrkrvfxhxbhaay.supabase.co` | 🟢 |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | `https://yonaaysrkrvfxhxbhaay.supabase.co` | 🟢 |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | anon key hardcoded | 🟢 ⚠️ exposto no client |
 | `SUPABASE_SERVICE_ROLE_KEY` | sem fallback — obrigatório no server | 🟢 |
 

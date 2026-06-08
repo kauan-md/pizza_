@@ -19,8 +19,8 @@ Configure estas variáveis no **Vercel Dashboard** (Project Settings → Environ
 
 ### Supabase Client (públicas, expõem no navegador)
 ```
-VITE_SUPABASE_URL=https://lygvmnlegydniwoqlvdn.supabase.co
-VITE_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Z3ZtbmxlZ3lkbml3b3FsdmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNzM5MDAsImV4cCI6MjA5NTc0OTkwMH0.4HagzGVW1pgIlSwRyUDo2ZcoUngntk20oqA97ndtFFs
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=https://lygvmnlegydniwoqlvdn.supabase.co
+NEXT_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imx5Z3ZtbmxlZ3lkbml3b3FsdmRuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODAxNzM5MDAsImV4cCI6MjA5NTc0OTkwMH0.4HagzGVW1pgIlSwRyUDo2ZcoUngntk20oqA97ndtFFs
 ```
 
 ### Supabase Server (privada, apenas no servidor Vercel)
@@ -51,8 +51,8 @@ No **Vercel Dashboard**:
 1. Vá para seu projeto → **Settings** → **Environment Variables**
 2. Clique **Add New**
 3. Preencha cada variável (copie os valores acima):
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
+   - `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+   - `NEXT_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
 
 **⚠️ Importante**: 
@@ -105,7 +105,7 @@ https://<seu-projeto>.vercel.app
 
 ### API retorna 401 Unauthorized
 **Solução**: 
-1. Confirme que `VITE_SUPABASE_ANON_KEY` está correto (ambos clientes e servidor)
+1. Confirme que `NEXT_SUPABASE_ANON_KEY` está correto (ambos clientes e servidor)
 2. No **Supabase Dashboard**, verifique:
    - RLS policies na tabela `categories` (SELECT para role `anon`)
    - Se a chave anon não expirou
@@ -140,7 +140,7 @@ Browser Client
 ## 🔒 Segurança
 
 ✅ **Correto**:
-- `VITE_SUPABASE_URL` e `VITE_SUPABASE_ANON_KEY` → públicas (prefixo VITE_)
+- `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` e `NEXT_SUPABASE_ANON_KEY` → públicas (prefixo VITE_)
 - `SUPABASE_SERVICE_ROLE_KEY` → privada (sem prefixo VITE_)
 
 ⚠️ **Nunca faça**:
