@@ -55,12 +55,12 @@ export function AddToCartModal({ product, open, onClose }: Props) {
 
   function addHalfHalf() {
     if (!secondProduct) return;
-    const price = Math.max(product.price, secondProduct.price);
+    const pricier = product.price >= secondProduct.price ? product : secondProduct;
     addItem({
-      id: `montada-${Date.now()}`,
+      id: pricier.id,
       name: `½ ${product.name} + ½ ${secondProduct.name}`,
       description: `Meio a meio: ${product.name} + ${secondProduct.name}`,
-      price,
+      price: pricier.price,
       oldPrice: undefined,
       category: "montada",
       tag: "Montada",
