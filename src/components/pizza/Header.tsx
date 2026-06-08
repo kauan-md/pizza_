@@ -3,7 +3,7 @@ import { Zap, User, ShoppingBag, LogOut, Package, Shield, Sun, Moon } from "luci
 import { useCart } from "@/context/cart";
 import { useAuth } from "@/context/auth";
 import { formatBRL } from "@/data/menu";
-import { Link } from "@tanstack/react-router";
+import { Link } from "react-router-dom";
 import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { AuthModal } from "./AuthModal";
 import { getNewOrderCount } from "@/lib/notification";

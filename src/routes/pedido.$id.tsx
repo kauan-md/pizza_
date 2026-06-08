@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, useParams } from "@tanstack/react-router";
+import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Zap, CheckCircle, Package, MapPin, CreditCard, ArrowLeft, Star } from "lucide-react";
 import { getOrder } from "@/lib/api/orders.functions";
@@ -7,13 +7,6 @@ import { formatBRL } from "@/data/menu";
 import type { Order, OrderItem } from "@/lib/db/types";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-
-export const Route = createFileRoute("/pedido/$id")({
-  head: ({ params }) => ({
-    meta: [{ title: `Pedido #${params.id.slice(0, 8)} — Pizza` }],
-  }),
-  component: OrderConfirmation,
-});
 
 const statusLabels: Record<string, string> = {
   pending: "Aguardando confirmação",
@@ -36,9 +29,9 @@ const paymentStatusLabels: Record<string, string> = {
   refunded: "Reembolsado",
 };
 
-function OrderConfirmation() {
+export default function OrderConfirmation() {
   const navigate = useNavigate();
-  const { id } = useParams({ from: "/pedido/$id" });
+  const { id } = useParams<{ id: string }>();
   const [order, setOrder] = useState<Order | null>(null);
   const [items, setItems] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +40,7 @@ function OrderConfirmation() {
   const [submittingReview, setSubmittingReview] = useState(false);
 
   useEffect(() => {
+    if (!id) return;
     getOrder({ data: { id } })
       .then((result) => {
         setOrder(result.order as Order);
@@ -73,7 +67,7 @@ function OrderConfirmation() {
         <h1 className="text-xl font-bold text-foreground">Pedido não encontrado</h1>
         <p className="text-sm text-muted-foreground">Não foi possível carregar os dados do pedido.</p>
         <button
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate("/")}
           className="rounded-xl bg-primary px-6 py-3 font-bold text-primary-foreground"
         >
           Voltar ao início
@@ -86,7 +80,7 @@ function OrderConfirmation() {
     <div className="min-h-screen bg-background">
       <header className="flex items-center gap-3 border-b border-border px-4 py-4">
         <button
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate("/")}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground transition-transform active:scale-95"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -210,7 +204,7 @@ function OrderConfirmation() {
                     }
                     toast.success("Avaliação enviada! Obrigado.");
                     setReviews({});
-                  } catch (err) {
+                  } catch {
                     toast.error("Erro ao enviar avaliação.");
                   }
                   setSubmittingReview(false);

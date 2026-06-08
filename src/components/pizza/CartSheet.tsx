@@ -1,5 +1,5 @@
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react";
-import { useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import {
   Sheet,
   SheetContent,
@@ -26,7 +26,7 @@ export function CartSheet({ open, onOpenChange }: CartSheetProps) {
 
   const handleCheckout = () => {
     onOpenChange(false);
-    navigate({ to: "/checkout" });
+    navigate("/checkout");
   };
 
   return (

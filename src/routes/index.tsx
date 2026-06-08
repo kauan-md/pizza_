@@ -1,4 +1,3 @@
-import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Zap } from "lucide-react";
 import { Header } from "@/components/pizza/Header";
@@ -7,21 +6,7 @@ import { Menu } from "@/components/pizza/Menu";
 import { CartBar } from "@/components/pizza/CartBar";
 import { CartSheet } from "@/components/pizza/CartSheet";
 
-export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [
-      { title: "Pizza — Delivery de Pizza em Osasco" },
-      {
-        name: "description",
-        content:
-          "Peça as melhores pizzas de Osasco no precinho de segunda a quinta por R$ 22,99. Entrega rápida e pagamento no Pix.",
-      },
-    ],
-  }),
-  component: Index,
-});
-
-function Index() {
+export default function Index() {
   const [cartOpen, setCartOpen] = useState(false);
 
   return (

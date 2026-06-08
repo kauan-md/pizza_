@@ -1,6 +1,5 @@
-import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { getSupabaseServer } from "./supabase.server";
+import { getSupabase } from "@/lib/supabase";
 
 const createOrderSchema = z.object({
   items: z.array(
@@ -20,77 +19,74 @@ const createOrderSchema = z.object({
   discount_applied: z.number().optional(),
 });
 
-export const createOrder = createServerFn({ method: "POST" })
-  .inputValidator(createOrderSchema)
-  .handler(async ({ data }) => {
-    const supabase = getSupabaseServer();
-    if (!supabase) throw new Error("Supabase não configurado no servidor");
+export async function createOrder({ data: input }: { data: z.infer<typeof createOrderSchema> }) {
+  const data = createOrderSchema.parse(input);
+  const supabase = getSupabase();
+  if (!supabase) throw new Error("Supabase não configurado");
 
-    const { data: order, error: orderError } = await supabase
-      .from("orders")
-      .insert({
-        total: data.total,
-        payment_method: data.payment_method,
-        payment_status: "pending",
-        delivery_address: data.delivery_address,
-        notes: data.notes || null,
-        status: "pending",
-        user_id: data.user_id || null,
-        coupon_id: data.coupon_id || null,
-        discount_applied: data.discount_applied || 0,
-      })
-      .select()
-      .single();
+  const { data: order, error: orderError } = await supabase
+    .from("orders")
+    .insert({
+      total: data.total,
+      payment_method: data.payment_method,
+      payment_status: "pending",
+      delivery_address: data.delivery_address,
+      notes: data.notes || null,
+      status: "pending",
+      user_id: data.user_id || null,
+      coupon_id: data.coupon_id || null,
+      discount_applied: data.discount_applied || 0,
+    })
+    .select()
+    .single();
 
-    if (orderError) throw new Error(orderError.message);
+  if (orderError) throw new Error(orderError.message);
 
-    const orderItems = data.items.map((item) => ({
-      order_id: order.id,
-      product_id: item.product_id,
-      product_name: item.product_name,
-      unit_price: item.unit_price,
-      quantity: item.quantity,
-    }));
+  const orderItems = data.items.map((item) => ({
+    order_id: order.id,
+    product_id: item.product_id,
+    product_name: item.product_name,
+    unit_price: item.unit_price,
+    quantity: item.quantity,
+  }));
 
-    const { error: itemsError } = await supabase
-      .from("order_items")
-      .insert(orderItems);
+  const { error: itemsError } = await supabase
+    .from("order_items")
+    .insert(orderItems);
 
-    if (itemsError) throw new Error(itemsError.message);
+  if (itemsError) throw new Error(itemsError.message);
 
-    if (data.coupon_id) {
-      const { error: couponError } = await supabase.rpc("increment_coupon_used_count", {
-        p_coupon_id: data.coupon_id,
-      });
-      if (couponError) {
-        await supabase.from("orders").update({ coupon_id: null, discount_applied: 0 }).eq("id", order.id);
-        throw new Error("Erro ao aplicar cupom.");
-      }
+  if (data.coupon_id) {
+    const { error: couponError } = await supabase.rpc("increment_coupon_used_count", {
+      p_coupon_id: data.coupon_id,
+    });
+    if (couponError) {
+      await supabase.from("orders").update({ coupon_id: null, discount_applied: 0 }).eq("id", order.id);
+      throw new Error("Erro ao aplicar cupom.");
     }
+  }
 
-    return order as { id: string };
-  });
+  return order as { id: string };
+}
 
-export const getOrder = createServerFn({ method: "GET" })
-  .inputValidator(z.object({ id: z.string() }))
-  .handler(async ({ data }) => {
-    const supabase = getSupabaseServer();
-    if (!supabase) throw new Error("Supabase não configurado no servidor");
+export async function getOrder({ data: input }: { data: { id: string } }) {
+  const supabase = getSupabase();
+  if (!supabase) throw new Error("Supabase não configurado");
 
-    const { data: order, error: orderError } = await supabase
-      .from("orders")
-      .select("*")
-      .eq("id", data.id)
-      .single();
+  const { data: order, error: orderError } = await supabase
+    .from("orders")
+    .select("*")
+    .eq("id", input.id)
+    .single();
 
-    if (orderError) throw new Error(orderError.message);
+  if (orderError) throw new Error(orderError.message);
 
-    const { data: items, error: itemsError } = await supabase
-      .from("order_items")
-      .select("*")
-      .eq("order_id", data.id);
+  const { data: items, error: itemsError } = await supabase
+    .from("order_items")
+    .select("*")
+    .eq("order_id", input.id);
 
-    if (itemsError) throw new Error(itemsError.message);
+  if (itemsError) throw new Error(itemsError.message);
 
-    return { order, items };
-  });
+  return { order, items };
+}

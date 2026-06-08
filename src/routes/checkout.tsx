@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Zap, ArrowLeft, ShoppingBag, MapPin, CreditCard, Banknote, Smartphone, Tag, Sparkles } from "lucide-react";
 import { useCart } from "@/context/cart";
@@ -7,13 +7,6 @@ import { formatBRL } from "@/data/menu";
 import { toast } from "sonner";
 import { createOrder } from "@/lib/api/orders.functions";
 import { validateCoupon } from "@/lib/api/coupons.functions";
-
-export const Route = createFileRoute("/checkout")({
-  head: () => ({
-    meta: [{ title: "Checkout — Pizza" }],
-  }),
-  component: Checkout,
-});
 
 const DELIVERY_FEE = 6.99;
 
@@ -25,16 +18,14 @@ const paymentOptions: { value: PaymentMethod; label: string; icon: typeof Smartp
   { value: "card", label: "Cartão", icon: CreditCard },
 ];
 
-function Checkout() {
+export default function Checkout() {
   const navigate = useNavigate();
   const { items, total, itemCount, clear } = useCart();
   const { user } = useAuth();
   const [submitting, setSubmitting] = useState(false);
-
   const [address, setAddress] = useState("");
   const [notes, setNotes] = useState("");
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("pix");
-
   const [couponCode, setCouponCode] = useState("");
   const [couponLoading, setCouponLoading] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<{
@@ -56,7 +47,7 @@ function Checkout() {
         <h1 className="text-xl font-bold text-foreground">Carrinho vazio</h1>
         <p className="text-sm">Adicione itens antes de finalizar o pedido.</p>
         <button
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate("/")}
           className="mt-2 rounded-xl bg-primary px-6 py-3 font-bold text-primary-foreground"
         >
           Ver cardápio
@@ -92,7 +83,6 @@ function Checkout() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!address.trim()) {
       toast.warning("Informe o endereço de entrega.");
       return;
@@ -120,7 +110,7 @@ function Checkout() {
 
       clear();
       toast.success("Pedido realizado com sucesso!");
-      navigate({ to: "/pedido/$id", params: { id: order.id } });
+      navigate(`/pedido/${order.id}`);
     } catch (err) {
       console.error("Erro ao criar pedido:", err);
       toast.error(`Erro: ${err instanceof Error ? err.message : "Tente novamente."}`);
@@ -133,7 +123,7 @@ function Checkout() {
     <div className="min-h-screen bg-background">
       <header className="flex items-center gap-3 border-b border-border px-4 py-4">
         <button
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate("/")}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground transition-transform active:scale-95"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -213,7 +203,6 @@ function Checkout() {
           </div>
         </div>
 
-        {/* Cupom */}
         <div className="space-y-2">
           <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Cupom de Desconto

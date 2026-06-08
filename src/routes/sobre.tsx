@@ -1,21 +1,14 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { Zap, ArrowLeft, Clock, MapPin, Phone, Instagram } from "lucide-react";
 
-export const Route = createFileRoute("/sobre")({
-  head: () => ({
-    meta: [{ title: "Sobre — Pizza" }],
-  }),
-  component: AboutPage,
-});
-
-function AboutPage() {
+export default function AboutPage() {
   const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-background">
       <header className="flex items-center gap-3 border-b border-border px-4 py-4">
         <button
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate("/")}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground transition-transform active:scale-95"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -27,7 +20,6 @@ function AboutPage() {
       </header>
 
       <div className="mx-auto max-w-2xl space-y-8 px-4 py-8">
-        {/* Hero */}
         <div className="text-center">
           <h1 className="font-display text-3xl font-extrabold text-foreground">
             Sobre a <span className="text-primary">Pizza</span>
@@ -37,7 +29,6 @@ function AboutPage() {
           </p>
         </div>
 
-        {/* Story */}
         <section className="rounded-xl border border-border bg-card p-6">
           <h2 className="font-display text-lg font-bold text-foreground">Nossa História</h2>
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
@@ -51,7 +42,6 @@ function AboutPage() {
           </p>
         </section>
 
-        {/* Info cards */}
         <div className="grid gap-4 sm:grid-cols-2">
           <section className="rounded-xl border border-border bg-card p-5">
             <Clock className="h-6 w-6 text-primary" />
@@ -89,7 +79,6 @@ function AboutPage() {
           </section>
         </div>
 
-        {/* Commitment */}
         <section className="rounded-xl border border-border bg-card p-6 text-center">
           <h2 className="font-display text-lg font-bold text-foreground">Feito com amor</h2>
           <p className="mt-2 text-sm text-muted-foreground">

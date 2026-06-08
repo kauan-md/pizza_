@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
+import { useNavigate, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Zap, ArrowLeft, Package, MapPin, CreditCard, ShoppingBag, User as UserIcon } from "lucide-react";
 import { useAuth } from "@/context/auth";
@@ -6,13 +6,6 @@ import { getSupabase } from "@/lib/supabase";
 import { formatBRL } from "@/data/menu";
 import type { Order, OrderItem } from "@/lib/db/types";
 import { Skeleton } from "@/components/ui/skeleton";
-
-export const Route = createFileRoute("/perfil")({
-  head: () => ({
-    meta: [{ title: "Meu Perfil — Pizza" }],
-  }),
-  component: Profile,
-});
 
 const statusLabels: Record<string, string> = {
   pending: "Aguardando confirmação",
@@ -28,7 +21,7 @@ const paymentLabels: Record<string, string> = {
   card: "Cartão",
 };
 
-function Profile() {
+export default function Profile() {
   const navigate = useNavigate();
   const { user, isLoading: authLoading, logout } = useAuth();
   const [orders, setOrders] = useState<(Order & { items?: OrderItem[] })[]>([]);
@@ -37,7 +30,7 @@ function Profile() {
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
-      navigate({ to: "/" });
+      navigate("/");
       return;
     }
 
@@ -110,7 +103,7 @@ function Profile() {
     <div className="min-h-screen bg-background">
       <header className="flex items-center gap-3 border-b border-border px-4 py-4">
         <button
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate("/")}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground transition-transform active:scale-95"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -150,8 +143,7 @@ function Profile() {
             {orders.map((order) => (
               <Link
                 key={order.id}
-                to="/pedido/$id"
-                params={{ id: order.id }}
+                to={`/pedido/${order.id}`}
                 className="block rounded-xl border border-border bg-card p-4 transition-colors hover:border-primary/30"
               >
                 <div className="flex items-center justify-between">

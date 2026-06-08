@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Zap, Lock, Loader2 } from "lucide-react";
 import { useAuth } from "@/context/auth";
@@ -7,14 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-export const Route = createFileRoute("/reset-password")({
-  head: () => ({
-    meta: [{ title: "Redefinir Senha — Pizza" }],
-  }),
-  component: ResetPassword,
-});
-
-function ResetPassword() {
+export default function ResetPassword() {
   const navigate = useNavigate();
   const { updatePassword } = useAuth();
   const [password, setPassword] = useState("");
@@ -33,7 +26,6 @@ function ResetPassword() {
         setReady(true);
       }
     });
-    // Check if already have session from URL fragment
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) setReady(true);
     });
@@ -54,7 +46,7 @@ function ResetPassword() {
     try {
       await updatePassword(password);
       toast.success("Senha redefinida com sucesso!");
-      navigate({ to: "/" });
+      navigate("/");
     } catch {
       toast.error("Erro ao redefinir a senha. Tente novamente.");
     } finally {

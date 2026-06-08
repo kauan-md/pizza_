@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { Zap, ArrowLeft, RefreshCw, Package, Pizza, Plus, Pencil, X, Upload, Tag, Star } from "lucide-react";
 import { useAuth } from "@/context/auth";
@@ -22,13 +22,6 @@ import { playNotificationSound, clearNewOrderCount } from "@/lib/notification";
 import { toast } from "sonner";
 import { CurrencyInput } from "@/components/ui/currency-input";
 import { Skeleton, ListSkeleton } from "@/components/ui/skeleton";
-
-export const Route = createFileRoute("/admin")({
-  head: () => ({
-    meta: [{ title: "Admin — Pizza" }],
-  }),
-  component: AdminPage,
-});
 
 const statusLabels: Record<string, string> = {
   pending: "Aguardando",
@@ -56,7 +49,7 @@ const nextStatuses: Record<string, string[]> = {
 
 type AdminTab = "orders" | "products" | "coupons" | "reviews";
 
-function AdminPage() {
+export default function AdminPage() {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
   const [tab, setTab] = useState<AdminTab>("orders");
@@ -65,7 +58,7 @@ function AdminPage() {
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
-      navigate({ to: "/" });
+      navigate("/");
       return;
     }
 
@@ -75,7 +68,7 @@ function AdminPage() {
         setIsAdmin(true);
       } catch {
         setIsAdmin(false);
-        navigate({ to: "/" });
+        navigate("/");
       }
     }
 
@@ -90,7 +83,7 @@ function AdminPage() {
     <div className="min-h-screen bg-background">
       <header className="flex items-center gap-3 border-b border-border px-4 py-4">
         <button
-          onClick={() => navigate({ to: "/" })}
+          onClick={() => navigate("/")}
           className="flex h-10 w-10 items-center justify-center rounded-full bg-secondary text-foreground transition-transform active:scale-95"
         >
           <ArrowLeft className="h-5 w-5" />
@@ -156,8 +149,6 @@ function AdminPage() {
   );
 }
 
-// ─── Orders Tab ────────────────────────────────────────────────────────
-
 function OrdersTab() {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
@@ -165,11 +156,10 @@ function OrdersTab() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [updating, setUpdating] = useState<string | null>(null);
-  const subRef = useRef<{ unsubscribe: () => void } | null>(null);
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate({ to: "/" }); return; }
+    if (!user) { navigate("/"); return; }
     clearNewOrderCount();
     loadOrders();
 
@@ -180,11 +170,9 @@ function OrdersTab() {
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "orders" },
-        (payload) => {
+        () => {
           playNotificationSound();
-          toast.success("Novo pedido!", {
-            description: `#${payload.new.id.slice(0, 8).toUpperCase()} — ${formatBRL(payload.new.total)}`,
-          });
+          toast.success("Novo pedido!");
           loadOrders();
         },
       )
@@ -284,8 +272,6 @@ function OrdersTab() {
   );
 }
 
-// ─── Products Tab ──────────────────────────────────────────────────────
-
 function ProductsTab() {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
@@ -298,7 +284,7 @@ function ProductsTab() {
 
   useEffect(() => {
     if (authLoading) return;
-    if (!user) { navigate({ to: "/" }); return; }
+    if (!user) { navigate("/"); return; }
     loadData();
   }, [user, authLoading]);
 
@@ -411,8 +397,6 @@ function ProductsTab() {
     </div>
   );
 }
-
-// ─── Product Form Modal ────────────────────────────────────────────────
 
 function ProductForm({ product, categories, onClose, onSaved }: {
   product: any | null;
@@ -528,13 +512,11 @@ function ProductForm({ product, categories, onClose, onSaved }: {
           <div className="grid grid-cols-3 gap-3">
             <div>
               <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Preço</label>
-              <CurrencyInput value={price} onChange={setPrice}
-                className="mt-1" />
+              <CurrencyInput value={price} onChange={setPrice} className="mt-1" />
             </div>
             <div>
               <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Preço Antigo</label>
-              <CurrencyInput value={oldPrice} onChange={setOldPrice}
-                className="mt-1" />
+              <CurrencyInput value={oldPrice} onChange={setOldPrice} className="mt-1" />
             </div>
             <div>
               <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Tag</label>
@@ -556,9 +538,7 @@ function ProductForm({ product, categories, onClose, onSaved }: {
             </div>
           </div>
 
-          {image && (
-            <img src={image} alt="preview" className="h-24 w-full rounded-lg object-cover" />
-          )}
+          {image && <img src={image} alt="preview" className="h-24 w-full rounded-lg object-cover" />}
 
           <div className="flex items-center gap-2">
             <input type="checkbox" id="available" checked={available} onChange={(e) => setAvailable(e.target.checked)}
@@ -568,9 +548,7 @@ function ProductForm({ product, categories, onClose, onSaved }: {
 
           <div className="flex gap-2 pt-2">
             <button type="button" onClick={onClose}
-              className="flex-1 rounded-lg border border-border bg-background py-3 text-sm font-semibold text-foreground">
-              Cancelar
-            </button>
+              className="flex-1 rounded-lg border border-border bg-background py-3 text-sm font-semibold text-foreground">Cancelar</button>
             <button type="submit" disabled={saving}
               className="flex-1 rounded-lg bg-primary py-3 text-sm font-bold text-primary-foreground disabled:opacity-50">
               {saving ? "Salvando..." : isNew ? "Criar Produto" : "Salvar"}
@@ -582,8 +560,6 @@ function ProductForm({ product, categories, onClose, onSaved }: {
   );
 }
 
-// ─── Coupons Tab ───────────────────────────────────────────────────────
-
 const discountTypeLabels: Record<string, string> = {
   percentage: "Porcentagem",
   fixed: "Valor Fixo",
@@ -594,7 +570,6 @@ function CouponsTab() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
-
   const [code, setCode] = useState("");
   const [discountType, setDiscountType] = useState<"percentage" | "fixed">("percentage");
   const [discountValue, setDiscountValue] = useState("");
@@ -683,8 +658,7 @@ function CouponsTab() {
             </div>
             <div>
               <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Valor mínimo (opcional)</label>
-              <CurrencyInput value={minOrderValue} onChange={setMinOrderValue}
-                className="mt-1" placeholder="R$ 30,00" />
+              <CurrencyInput value={minOrderValue} onChange={setMinOrderValue} className="mt-1" placeholder="R$ 30,00" />
             </div>
             <div>
               <label className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Usos máximos (opcional)</label>
@@ -738,8 +712,6 @@ function CouponsTab() {
     </div>
   );
 }
-
-// ─── Reviews Tab ──────────────────────────────────────────────────────
 
 function ReviewsTab() {
   const [reviews, setReviews] = useState<any[]>([]);
