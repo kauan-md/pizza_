@@ -1,8 +1,5 @@
 {
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api/index.js"
-    }
-  ]
+  "buildCommand": "bunx vite build",
+  "outputDirectory": "dist/client",
+  "framework": "vite"
 }
