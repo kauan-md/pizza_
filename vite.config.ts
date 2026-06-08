@@ -13,6 +13,10 @@ export default defineConfig({
       router: {
         autoCodeSplitting: true,
       },
+      spa: {
+        enabled: true,
+        maskPath: "/",
+      },
     }),
     react(),
     tailwindcss(),
