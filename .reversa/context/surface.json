@@ -1,0 +1,79 @@
+{
+  "generated_at": "2026-06-08T00:00:00Z",
+  "project_root": "c:/Users/mssve/Documents/DEV/Brolabs/Pizza_Lopez",
+  "languages": [
+    { "name": "TypeScript", "extensions": [".ts", ".tsx"], "file_count": 94 },
+    { "name": "SQL", "extensions": [".sql"], "file_count": 2 },
+    { "name": "CSS", "extensions": [".css"], "file_count": 1 }
+  ],
+  "primary_language": "TypeScript",
+  "frameworks": [
+    { "name": "TanStack Start", "version": "1.167.50", "source": "package.json" },
+    { "name": "TanStack Router", "version": "1.168.25", "source": "package.json" },
+    { "name": "React", "version": "19.2.0", "source": "package.json" },
+    { "name": "Tailwind CSS", "version": "4.2.1", "source": "package.json" },
+    { "name": "Supabase JS", "version": "2.107.0", "source": "package.json" },
+    { "name": "Vite", "version": "7.3.1", "source": "package.json" },
+    { "name": "nitro", "version": "3.0.260429-beta", "source": "package.json" }
+  ],
+  "package_manager": "bun",
+  "entry_points": [
+    { "path": "src/start.ts", "type": "app_entry" },
+    { "path": "src/server.ts", "type": "server_entry" },
+    { "path": "src/router.tsx", "type": "router_entry" }
+  ],
+  "config_files": [
+    "vite.config.ts",
+    "tsconfig.json",
+    "components.json",
+    "vercel.json",
+    "bunfig.toml",
+    "supabase/config.toml"
+  ],
+  "ci_cd": [],
+  "docker": {
+    "dockerfile": null,
+    "compose": null
+  },
+  "database_hints": [
+    { "path": "src/lib/db/schema.sql", "type": "ddl_schema" },
+    { "path": "src/lib/db/types.ts", "type": "orm_types" },
+    { "path": "supabase/migrations/", "type": "migrations_dir" }
+  ],
+  "test_framework": null,
+  "test_file_count": 0,
+  "modules": [
+    "auth",
+    "cart",
+    "menu",
+    "orders",
+    "admin",
+    "checkout",
+    "reviews",
+    "database"
+  ],
+  "total_files": 97,
+  "lovable_coupling": {
+    "detected": true,
+    "files": [
+      "vite.config.ts",
+      "src/lib/lovable-error-reporting.ts"
+    ],
+    "packages": ["@lovable.dev/vite-tanstack-config"]
+  },
+  "organization_suggestion": {
+    "granularity": "endpoint",
+    "rationale": "O roteamento é centralizado via TanStack Router com file-based routes em src/routes/ e funções de servidor em src/lib/api/.",
+    "signals": [
+      {
+        "type": "centralized_routing",
+        "evidence": ["src/routes/index.tsx", "src/routes/admin.tsx", "src/routes/checkout.tsx", "src/routes/pedido.$id.tsx", "src/router.tsx"]
+      },
+      {
+        "type": "server_functions",
+        "evidence": ["src/lib/api/orders.functions.ts", "src/lib/api/admin.functions.ts", "src/lib/api/coupons.functions.ts", "src/lib/api/reviews.functions.ts"]
+      }
+    ],
+    "features": []
+  }
+}

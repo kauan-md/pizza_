@@ -1,0 +1,58 @@
+{
+  "version": "1.2.43",
+  "project": "pizza-lopez",
+  "user_name": "Marcos",
+  "chat_language": "pt-br",
+  "doc_language": "Português",
+  "answer_mode": "chat",
+  "doc_level": "essencial",
+  "output_folder": "_reversa_sdd",
+  "forward_folder": "_reversa_forward",
+  "phase": "concluido",
+  "completed": ["reconhecimento", "escavacao", "interpretacao", "geracao", "revisao"],
+  "pending": [
+    "reconhecimento",
+    "escavacao",
+    "interpretacao",
+    "geracao",
+    "revisao"
+  ],
+  "migration_goal": "Desacoplar do Lovable e migrar para Supabase + Vercel",
+  "checkpoints": {
+    "reviewer": {
+      "artifacts": ["_reversa_sdd/confidence-report.md", "_reversa_sdd/questions.md"],
+      "final_confidence_percent": 81,
+      "questions_generated": 5,
+      "reclassifications": 1,
+      "updated_at": "2026-06-08T00:00:00Z"
+    },
+    "writer": {
+      "units": ["autenticacao", "cardapio", "carrinho", "checkout", "pedido", "admin", "avaliacoes", "perfil"],
+      "artifacts_per_unit": ["requirements.md", "design.md", "tasks.md"],
+      "updated_at": "2026-06-08T00:00:00Z"
+    },
+    "architect": {
+      "artifacts": ["_reversa_sdd/architecture.md", "_reversa_sdd/c4-context.md"],
+      "updated_at": "2026-06-08T00:00:00Z"
+    },
+    "detective": {
+      "artifacts": ["_reversa_sdd/domain.md", "_reversa_sdd/state-machines.md", "_reversa_sdd/permissions.md"],
+      "rules_found": 12,
+      "updated_at": "2026-06-08T00:00:00Z"
+    },
+    "archaeologist": {
+      "modules_analyzed": ["auth", "cart", "menu", "orders", "admin", "checkout", "reviews", "database"],
+      "artifacts": ["_reversa_sdd/code-analysis.md", ".reversa/context/modules.json"],
+      "updated_at": "2026-06-08T00:00:00Z"
+    },
+    "scout": {
+      "artifacts": [
+        "_reversa_sdd/inventory.md",
+        "_reversa_sdd/dependencies.md",
+        ".reversa/context/surface.json"
+      ],
+      "modules_identified": ["auth", "cart", "menu", "orders", "admin", "checkout", "reviews", "database"],
+      "updated_at": "2026-06-08T00:00:00Z"
+    }
+  }
+}

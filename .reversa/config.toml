@@ -1,0 +1,6 @@
+[specs]
+layout = "feature-folder"
+granularity = "endpoint"
+custom_folders = []
+scout_suggestion = "endpoint"
+decided_at = "2026-06-08T00:00:00Z"

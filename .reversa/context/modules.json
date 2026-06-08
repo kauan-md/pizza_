@@ -1,0 +1,270 @@
+{
+  "generated_at": "2026-06-08T00:00:00Z",
+  "modules": [
+    {
+      "name": "auth",
+      "path": "src/integrations/supabase + src/context/auth.tsx",
+      "purpose": "Autenticação via Supabase Auth com fallback para localStorage; middleware SSR para server functions",
+      "primary_files": [
+        "src/context/auth.tsx",
+        "src/integrations/supabase/client.ts",
+        "src/integrations/supabase/client.server.ts",
+        "src/integrations/supabase/auth-attacher.ts",
+        "src/integrations/supabase/auth-middleware.ts"
+      ],
+      "functions": [
+        { "name": "login", "file": "src/context/auth.tsx", "params": ["email: string", "password: string"], "returns": "Promise<void>", "confidence": "confirmed" },
+        { "name": "register", "file": "src/context/auth.tsx", "params": ["name: string", "email: string", "password: string"], "returns": "Promise<void>", "confidence": "confirmed" },
+        { "name": "logout", "file": "src/context/auth.tsx", "params": [], "returns": "void", "confidence": "confirmed" },
+        { "name": "forgotPassword", "file": "src/context/auth.tsx", "params": ["email: string"], "returns": "Promise<void>", "confidence": "confirmed" },
+        { "name": "updatePassword", "file": "src/context/auth.tsx", "params": ["password: string"], "returns": "Promise<void>", "confidence": "confirmed" },
+        { "name": "mapSupabaseUser", "file": "src/context/auth.tsx", "params": ["supaUser: User"], "returns": "UserSession", "confidence": "confirmed" },
+        { "name": "attachSupabaseAuth", "file": "src/integrations/supabase/auth-attacher.ts", "params": [], "returns": "Middleware (injects Bearer token)", "confidence": "confirmed" },
+        { "name": "requireSupabaseAuth", "file": "src/integrations/supabase/auth-middleware.ts", "params": [], "returns": "Middleware (validates JWT, exposes context)", "confidence": "confirmed" }
+      ],
+      "entities": [
+        {
+          "name": "UserSession",
+          "fields": [
+            { "name": "id", "type": "string", "required": true },
+            { "name": "name", "type": "string", "required": true },
+            { "name": "email", "type": "string", "required": true },
+            { "name": "avatarUrl", "type": "string", "required": false }
+          ],
+          "confidence": "confirmed"
+        }
+      ],
+      "business_rules": [
+        { "description": "Fallback para localStorage quando Supabase indisponível", "location": "src/context/auth.tsx", "confidence": "confirmed" },
+        { "description": "Token JWT anexado automaticamente em todos os RPCs de server functions via middleware client", "location": "src/integrations/supabase/auth-attacher.ts", "confidence": "confirmed" }
+      ],
+      "dependencies": [],
+      "algorithms": ["mapSupabaseUser: name fallback chain (full_name → name → email prefix)", "lazy Supabase client via Proxy"],
+      "complexity": "medium"
+    },
+    {
+      "name": "cart",
+      "path": "src/context/cart.tsx",
+      "purpose": "Carrinho de compras client-side com persistência em localStorage",
+      "primary_files": ["src/context/cart.tsx"],
+      "functions": [
+        { "name": "addItem", "file": "src/context/cart.tsx", "params": ["product: Product"], "returns": "void", "confidence": "confirmed" },
+        { "name": "decrement", "file": "src/context/cart.tsx", "params": ["id: string"], "returns": "void", "confidence": "confirmed" },
+        { "name": "removeItem", "file": "src/context/cart.tsx", "params": ["id: string"], "returns": "void", "confidence": "confirmed" },
+        { "name": "clear", "file": "src/context/cart.tsx", "params": [], "returns": "void", "confidence": "confirmed" }
+      ],
+      "entities": [
+        {
+          "name": "CartItem",
+          "fields": [
+            { "name": "id", "type": "string", "required": true },
+            { "name": "name", "type": "string", "required": true },
+            { "name": "price", "type": "number", "required": true },
+            { "name": "quantity", "type": "number", "required": true }
+          ],
+          "confidence": "confirmed"
+        }
+      ],
+      "business_rules": [
+        { "description": "Decrement remove item automaticamente quando quantity chega a 0", "location": "src/context/cart.tsx", "confidence": "confirmed" },
+        { "description": "Cart é inteiramente client-side — sem persistência em banco", "location": "src/context/cart.tsx", "confidence": "confirmed" }
+      ],
+      "dependencies": ["menu"],
+      "algorithms": ["total = sum(price * quantity)", "itemCount = sum(quantity)"],
+      "complexity": "low"
+    },
+    {
+      "name": "menu",
+      "path": "src/data/menu.ts + src/components/pizza/",
+      "purpose": "Tipos de produto e categoria; componentes visuais do cardápio",
+      "primary_files": ["src/data/menu.ts", "src/components/pizza/Menu.tsx", "src/components/pizza/ProductCard.tsx", "src/components/pizza/CategoryNav.tsx"],
+      "functions": [
+        { "name": "formatBRL", "file": "src/data/menu.ts", "params": ["value: number"], "returns": "string", "confidence": "confirmed" }
+      ],
+      "entities": [
+        {
+          "name": "Product (client contract)",
+          "fields": [
+            { "name": "id", "type": "string", "required": true },
+            { "name": "name", "type": "string", "required": true },
+            { "name": "description", "type": "string", "required": true },
+            { "name": "price", "type": "number", "required": true },
+            { "name": "oldPrice", "type": "number", "required": false },
+            { "name": "category", "type": "string", "required": true },
+            { "name": "tag", "type": "string", "required": false },
+            { "name": "image", "type": "string", "required": true }
+          ],
+          "confidence": "confirmed"
+        },
+        {
+          "name": "CategoryDef",
+          "fields": [
+            { "name": "id", "type": "string", "required": true },
+            { "name": "label", "type": "string", "required": true }
+          ],
+          "confidence": "confirmed"
+        }
+      ],
+      "business_rules": [],
+      "dependencies": [],
+      "algorithms": ["formatBRL: toLocaleString pt-BR BRL"],
+      "complexity": "low"
+    },
+    {
+      "name": "orders",
+      "path": "src/lib/api/orders.functions.ts + src/routes/pedido.$id.tsx",
+      "purpose": "Criação e consulta de pedidos via server functions TanStack",
+      "primary_files": ["src/lib/api/orders.functions.ts", "src/routes/pedido.$id.tsx"],
+      "functions": [
+        { "name": "createOrder", "file": "src/lib/api/orders.functions.ts", "params": ["CreateOrderInput (Zod)"], "returns": "Promise<{ id: string }>", "confidence": "confirmed" },
+        { "name": "getOrder", "file": "src/lib/api/orders.functions.ts", "params": ["{ id: string }"], "returns": "Promise<{ order, items }>", "confidence": "confirmed" }
+      ],
+      "entities": [
+        {
+          "name": "Order",
+          "fields": [
+            { "name": "id", "type": "uuid", "required": true },
+            { "name": "user_id", "type": "uuid", "required": false },
+            { "name": "status", "type": "OrderStatus enum", "required": true },
+            { "name": "total", "type": "numeric(10,2)", "required": true },
+            { "name": "payment_method", "type": "pix|money|card", "required": false },
+            { "name": "payment_status", "type": "PaymentStatus enum", "required": false },
+            { "name": "delivery_address", "type": "text", "required": false },
+            { "name": "notes", "type": "text", "required": false },
+            { "name": "coupon_id", "type": "uuid", "required": false },
+            { "name": "discount_applied", "type": "numeric(10,2)", "required": true, "default": "0" }
+          ],
+          "confidence": "confirmed"
+        },
+        {
+          "name": "OrderItem",
+          "fields": [
+            { "name": "order_id", "type": "uuid", "required": true },
+            { "name": "product_id", "type": "text", "required": true },
+            { "name": "product_name", "type": "text", "required": true },
+            { "name": "unit_price", "type": "numeric(10,2)", "required": true },
+            { "name": "quantity", "type": "int", "required": true }
+          ],
+          "confidence": "confirmed"
+        }
+      ],
+      "business_rules": [
+        { "description": "Pedido anônimo permitido (user_id opcional)", "location": "orders.functions.ts schema", "confidence": "confirmed" },
+        { "description": "Se coupon falhar ao ser aplicado, reverte coupon_id e discount_applied no pedido", "location": "orders.functions.ts:createOrder", "confidence": "confirmed" }
+      ],
+      "dependencies": ["checkout", "database"],
+      "algorithms": ["Pseudo-transação manual: INSERT orders → INSERT order_items → RPC coupon"],
+      "complexity": "medium"
+    },
+    {
+      "name": "admin",
+      "path": "src/lib/api/admin.functions.ts + src/routes/admin.tsx",
+      "purpose": "Painel administrativo: gestão de pedidos, produtos, cupons e upload de imagens",
+      "primary_files": ["src/lib/api/admin.functions.ts", "src/routes/admin.tsx"],
+      "functions": [
+        { "name": "listAllOrders", "file": "admin.functions.ts", "params": [], "returns": "Promise<OrderWithItems[]>", "confidence": "confirmed" },
+        { "name": "updateOrderStatus", "file": "admin.functions.ts", "params": ["{ orderId, status }"], "returns": "Promise<{ success }>", "confidence": "confirmed" },
+        { "name": "listAllProducts", "file": "admin.functions.ts", "params": [], "returns": "Promise<Product[]>", "confidence": "confirmed" },
+        { "name": "createProduct", "file": "admin.functions.ts", "params": ["ProductInput"], "returns": "Promise<{ success }>", "confidence": "confirmed" },
+        { "name": "updateProduct", "file": "admin.functions.ts", "params": ["ProductInput + id"], "returns": "Promise<{ success }>", "confidence": "confirmed" },
+        { "name": "toggleProductAvailability", "file": "admin.functions.ts", "params": ["{ id, available }"], "returns": "Promise<{ success }>", "confidence": "confirmed" },
+        { "name": "listAllCoupons", "file": "admin.functions.ts", "params": [], "returns": "Promise<Coupon[]>", "confidence": "confirmed" },
+        { "name": "createCoupon", "file": "admin.functions.ts", "params": ["CouponInput"], "returns": "Promise<{ success }>", "confidence": "confirmed" },
+        { "name": "toggleCoupon", "file": "admin.functions.ts", "params": ["{ id, active }"], "returns": "Promise<{ success }>", "confidence": "confirmed" },
+        { "name": "uploadImage", "file": "admin.functions.ts", "params": ["{ base64, fileName }"], "returns": "Promise<{ url }>", "confidence": "confirmed" }
+      ],
+      "entities": [],
+      "business_rules": [
+        { "description": "Todas as operações admin usam service role key (bypassa RLS)", "location": "admin.functions.ts (getSupabaseAdmin)", "confidence": "confirmed" },
+        { "description": "Status de pedido segue máquina de estado: pending→preparing→delivering→delivered | pending→cancelled", "location": "schema.sql constraint", "confidence": "confirmed" }
+      ],
+      "dependencies": ["database"],
+      "algorithms": ["listAllOrders: batch query + Map groupBy order_id", "uploadImage: base64 atob → Uint8Array → Storage"],
+      "complexity": "high"
+    },
+    {
+      "name": "checkout",
+      "path": "src/routes/checkout.tsx + src/lib/api/coupons.functions.ts",
+      "purpose": "Fluxo de finalização de pedido com validação de cupom e cálculo de desconto",
+      "primary_files": ["src/routes/checkout.tsx", "src/lib/api/coupons.functions.ts"],
+      "functions": [
+        { "name": "validateCoupon", "file": "coupons.functions.ts", "params": ["{ code: string, orderTotal: number }"], "returns": "Promise<CouponValidationResult>", "confidence": "confirmed" }
+      ],
+      "entities": [
+        {
+          "name": "Coupon",
+          "fields": [
+            { "name": "id", "type": "uuid", "required": true },
+            { "name": "code", "type": "text unique", "required": true },
+            { "name": "discount_type", "type": "percentage|fixed", "required": true },
+            { "name": "discount_value", "type": "numeric(10,2) > 0", "required": true },
+            { "name": "min_order_value", "type": "numeric(10,2)", "required": false },
+            { "name": "max_uses", "type": "int", "required": false },
+            { "name": "used_count", "type": "int default 0", "required": true },
+            { "name": "active", "type": "bool default true", "required": true },
+            { "name": "expires_at", "type": "timestamptz", "required": false }
+          ],
+          "confidence": "confirmed"
+        }
+      ],
+      "business_rules": [
+        { "description": "Cupom validado em: ativo + não expirado + max_uses não atingido + min_order_value respeitado", "location": "coupons.functions.ts:validateCoupon", "confidence": "confirmed" },
+        { "description": "Taxa de entrega DELIVERY_FEE = 6.99 hardcoded", "location": "routes/checkout.tsx", "confidence": "confirmed" },
+        { "description": "Desconto percentual arredondado para 2 casas decimais", "location": "coupons.functions.ts", "confidence": "confirmed" }
+      ],
+      "dependencies": ["orders", "cart"],
+      "algorithms": ["discount_pct = round(total * (val/100) * 100) / 100, capped at total", "discount_fixed = min(val, total)"],
+      "complexity": "medium"
+    },
+    {
+      "name": "reviews",
+      "path": "src/lib/api/reviews.functions.ts",
+      "purpose": "Criação e listagem de avaliações de produtos",
+      "primary_files": ["src/lib/api/reviews.functions.ts"],
+      "functions": [
+        { "name": "createReview", "file": "reviews.functions.ts", "params": ["{ product_id, order_id, author_name, rating, comment? }"], "returns": "Promise<{ success }>", "confidence": "confirmed" },
+        { "name": "listProductReviews", "file": "reviews.functions.ts", "params": ["{ product_id }"], "returns": "Promise<Review[]>", "confidence": "confirmed" },
+        { "name": "listAllReviews", "file": "reviews.functions.ts", "params": [], "returns": "Promise<Review[]>", "confidence": "confirmed" }
+      ],
+      "entities": [
+        {
+          "name": "Review",
+          "fields": [
+            { "name": "id", "type": "uuid", "required": true },
+            { "name": "product_id", "type": "text", "required": true },
+            { "name": "user_id", "type": "uuid", "required": false },
+            { "name": "order_id", "type": "uuid", "required": false },
+            { "name": "author_name", "type": "text", "required": true },
+            { "name": "rating", "type": "int 1-5", "required": true },
+            { "name": "comment", "type": "text", "required": false }
+          ],
+          "confidence": "confirmed"
+        }
+      ],
+      "business_rules": [
+        { "description": "Rating deve ser inteiro entre 1 e 5 (validado no Zod e constraint SQL)", "location": "reviews.functions.ts + schema.sql", "confidence": "confirmed" }
+      ],
+      "dependencies": ["database"],
+      "algorithms": [],
+      "complexity": "low"
+    },
+    {
+      "name": "database",
+      "path": "src/lib/db/ + supabase/",
+      "purpose": "Schema SQL completo, tipos TypeScript derivados, RLS, triggers e funções PL/pgSQL",
+      "primary_files": ["src/lib/db/schema.sql", "src/lib/db/types.ts", "supabase/config.toml", "supabase/migrations/20260604050244_*.sql"],
+      "functions": [
+        { "name": "handle_new_user()", "file": "schema.sql", "params": [], "returns": "trigger", "confidence": "confirmed" },
+        { "name": "increment_coupon_used_count(p_coupon_id)", "file": "schema.sql", "params": ["p_coupon_id: uuid"], "returns": "void (security definer)", "confidence": "confirmed" }
+      ],
+      "entities": ["profiles", "categories", "products", "orders", "order_items", "coupons", "reviews"],
+      "business_rules": [
+        { "description": "Perfil criado automaticamente via trigger ao registrar usuário no Supabase Auth", "location": "schema.sql:on_auth_user_created", "confidence": "confirmed" },
+        { "description": "Todas as tabelas têm RLS habilitado", "location": "schema.sql", "confidence": "confirmed" }
+      ],
+      "dependencies": [],
+      "algorithms": [],
+      "complexity": "medium"
+    }
+  ]
+}
