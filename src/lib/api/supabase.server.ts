@@ -10,8 +10,12 @@ export function getSupabaseServer() {
     const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseAnonKey) {
-      console.warn("[supabase.server] VITE_SUPABASE_URL e/ou VITE_SUPABASE_ANON_KEY não definidas.");
-      return null;
+      const missing = [
+        ...(!supabaseUrl ? ['VITE_SUPABASE_URL'] : []),
+        ...(!supabaseAnonKey ? ['VITE_SUPABASE_ANON_KEY'] : []),
+      ];
+      console.error(`[supabase.server] Missing environment variables: ${missing.join(', ')}`);
+      throw new Error(`Missing Supabase environment variable(s): ${missing.join(', ')}.`);
     }
 
     supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
@@ -30,8 +34,12 @@ export function getSupabaseAdmin() {
     const serviceRoleKey = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY;
 
     if (!supabaseUrl || !serviceRoleKey) {
-      console.warn("[supabase.server] VITE_SUPABASE_SERVICE_ROLE_KEY não configurada.");
-      return null;
+      const missing = [
+        ...(!supabaseUrl ? ['VITE_SUPABASE_URL'] : []),
+        ...(!serviceRoleKey ? ['VITE_SUPABASE_SERVICE_ROLE_KEY'] : []),
+      ];
+      console.error(`[supabase.server] Missing environment variables: ${missing.join(', ')}`);
+      throw new Error(`Missing Supabase environment variable(s): ${missing.join(', ')}.`);
     }
 
     supabaseAdminInstance = createClient(supabaseUrl, serviceRoleKey, {

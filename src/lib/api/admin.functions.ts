@@ -1,8 +1,44 @@
 import { createServerFn } from "@tanstack/react-start";
+import { getRequest } from "@tanstack/react-start/server";
 import { z } from "zod";
 import { getSupabaseAdmin } from "./supabase.server";
 
+async function requireAdmin() {
+  const request = getRequest();
+  const authHeader = request?.headers?.get("authorization");
+
+  if (!authHeader?.startsWith("Bearer ")) {
+    throw new Error("Unauthorized: missing or invalid authorization header");
+  }
+
+  const token = authHeader.replace("Bearer ", "");
+  const supabase = getSupabaseAdmin();
+  if (!supabase) throw new Error("Supabase não configurado");
+
+  const { data: userData, error: userError } = await supabase.auth.getUser(token);
+  if (userError || !userData?.user?.id) {
+    throw new Error("Unauthorized: invalid user token");
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", userData.user.id)
+    .single();
+
+  if (profileError) {
+    throw new Error(profileError.message);
+  }
+
+  if (profile?.role !== "admin") {
+    throw new Error("Unauthorized: admin access required");
+  }
+
+  return userData.user.id;
+}
+
 export const listAllOrders = createServerFn({ method: "GET" }).handler(async () => {
+  await requireAdmin();
   const supabase = getSupabaseAdmin();
   if (!supabase) throw new Error("Supabase não configurado");
 
@@ -36,6 +72,11 @@ export const listAllOrders = createServerFn({ method: "GET" }).handler(async () 
   }));
 });
 
+export const checkAdminAccess = createServerFn({ method: "GET" }).handler(async () => {
+  await requireAdmin();
+  return { success: true };
+});
+
 const updateStatusSchema = z.object({
   orderId: z.string().uuid(),
   status: z.enum(["pending", "preparing", "delivering", "delivered", "cancelled"]),
@@ -44,6 +85,7 @@ const updateStatusSchema = z.object({
 export const updateOrderStatus = createServerFn({ method: "POST" })
   .inputValidator(updateStatusSchema)
   .handler(async ({ data }) => {
+    await requireAdmin();
     const supabase = getSupabaseAdmin();
     if (!supabase) throw new Error("Supabase não configurado");
 
@@ -60,6 +102,7 @@ export const updateOrderStatus = createServerFn({ method: "POST" })
 // ─── Product Management ────────────────────────────────────────────────
 
 export const listAllProducts = createServerFn({ method: "GET" }).handler(async () => {
+  await requireAdmin();
   const supabase = getSupabaseAdmin();
   if (!supabase) throw new Error("Supabase não configurado");
 
@@ -87,6 +130,7 @@ const productSchema = z.object({
 export const createProduct = createServerFn({ method: "POST" })
   .inputValidator(productSchema)
   .handler(async ({ data }) => {
+    await requireAdmin();
     const supabase = getSupabaseAdmin();
     if (!supabase) throw new Error("Supabase não configurado");
 
@@ -121,6 +165,7 @@ const updateProductSchema = z.object({
 export const updateProduct = createServerFn({ method: "POST" })
   .inputValidator(updateProductSchema)
   .handler(async ({ data }) => {
+    await requireAdmin();
     const supabase = getSupabaseAdmin();
     if (!supabase) throw new Error("Supabase não configurado");
 
@@ -145,6 +190,7 @@ export const updateProduct = createServerFn({ method: "POST" })
 export const toggleProductAvailability = createServerFn({ method: "POST" })
   .inputValidator(z.object({ id: z.string(), available: z.boolean() }))
   .handler(async ({ data }) => {
+    await requireAdmin();
     const supabase = getSupabaseAdmin();
     if (!supabase) throw new Error("Supabase não configurado");
 
@@ -165,6 +211,7 @@ const uploadImageSchema = z.object({
 // ─── Coupon Management ─────────────────────────────────────────────────
 
 export const listAllCoupons = createServerFn({ method: "GET" }).handler(async () => {
+  await requireAdmin();
   const supabase = getSupabaseAdmin();
   if (!supabase) throw new Error("Supabase não configurado");
   const { data, error } = await supabase
@@ -187,6 +234,7 @@ const couponSchema = z.object({
 export const createCoupon = createServerFn({ method: "POST" })
   .inputValidator(couponSchema)
   .handler(async ({ data }) => {
+    await requireAdmin();
     const supabase = getSupabaseAdmin();
     if (!supabase) throw new Error("Supabase não configurado");
     const { error } = await supabase.from("coupons").insert({
@@ -210,6 +258,7 @@ const toggleCouponSchema = z.object({
 export const toggleCoupon = createServerFn({ method: "POST" })
   .inputValidator(toggleCouponSchema)
   .handler(async ({ data }) => {
+    await requireAdmin();
     const supabase = getSupabaseAdmin();
     if (!supabase) throw new Error("Supabase não configurado");
     const { error } = await supabase
@@ -223,6 +272,7 @@ export const toggleCoupon = createServerFn({ method: "POST" })
 export const uploadImage = createServerFn({ method: "POST" })
   .inputValidator(uploadImageSchema)
   .handler(async ({ data }) => {
+    await requireAdmin();
     const supabase = getSupabaseAdmin();
     if (!supabase) throw new Error("Supabase não configurado");
 

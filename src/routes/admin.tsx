@@ -14,6 +14,7 @@ import {
   listAllCoupons,
   createCoupon,
   toggleCoupon,
+  checkAdminAccess,
 } from "@/lib/api/admin.functions";
 import { listAllReviews } from "@/lib/api/reviews.functions";
 import { formatBRL } from "@/data/menu";
@@ -59,6 +60,31 @@ function AdminPage() {
   const navigate = useNavigate();
   const { user, isLoading: authLoading } = useAuth();
   const [tab, setTab] = useState<AdminTab>("orders");
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) {
+      navigate({ to: "/" });
+      return;
+    }
+
+    async function verify() {
+      try {
+        await checkAdminAccess();
+        setIsAdmin(true);
+      } catch {
+        setIsAdmin(false);
+        navigate({ to: "/" });
+      }
+    }
+
+    verify();
+  }, [authLoading, user, navigate]);
+
+  if (authLoading || isAdmin === null) {
+    return <div className="min-h-screen bg-background"><div className="px-4 py-6"><ListSkeleton rows={4} /></div></div>;
+  }
 
   return (
     <div className="min-h-screen bg-background">

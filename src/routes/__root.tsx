@@ -10,7 +10,7 @@ import {
 import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
+import { reportAppError } from "../lib/error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { AuthProvider } from "@/context/auth";
 import { CartProvider } from "@/context/cart";
@@ -42,7 +42,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
+    reportAppError(error, { boundary: "tanstack_root_error_component" });
   }, [error]);
 
   return (
@@ -98,8 +98,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Pizza — Delivery de Pizza em Osasco" },
 
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/44a6401c-f8e9-43e7-adf6-ae940a96284d/id-preview-0ae47b89--a125c0fe-0c75-44b7-994e-2a7c5ebe99bb.lovable.app-1780178950089.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/44a6401c-f8e9-43e7-adf6-ae940a96284d/id-preview-0ae47b89--a125c0fe-0c75-44b7-994e-2a7c5ebe99bb.lovable.app-1780178950089.png" },
       { name: "description", content: "Pizza_ synchronizes your local project with your Git repository." },
       { property: "og:description", content: "Pizza_ synchronizes your local project with your Git repository." },
       { name: "twitter:description", content: "Pizza_ synchronizes your local project with your Git repository." },

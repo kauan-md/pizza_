@@ -1,0 +1,14 @@
+{
+  "schema-version": 1,
+  "feature-dir": "_reversa_forward/001-desacoplar-lovable-supabase",
+  "feature-id": "001",
+  "short-name": "desacoplar-lovable-supabase",
+  "started-at": "2026-06-08T00:00:00Z",
+  "current-stage": "coding",
+  "stages-completed": [
+    "requirements",
+    "clarify",
+    "plan"
+  ],
+  "paused-features": []
+}
